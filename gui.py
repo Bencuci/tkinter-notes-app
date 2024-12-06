@@ -56,11 +56,16 @@ class NewNoteWindow(tk.Toplevel):
         self.title_label = ttk.Label(self, text="Create a New Note", font=("Helvetica", 16))
         self.note_text = tk.Text(self, height=10, width=40)
         self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
+        self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
     
     def create_layout(self):
-        self.title_label.pack(pady=10)
-        self.note_text.pack(pady=10)
-        self.save_button.pack(pady=10)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        
+        self.title_label.grid(row=0, column=0, pady=10, padx=5, columnspan=2, sticky='n')
+        self.note_text.grid(row=1, column=0, pady=10, padx=5, columnspan=2)
+        self.save_button.grid(row=2, column=0, pady=10, padx=5, sticky='e')
+        self.cancel_button.grid(row=2, column=1, pady=10, padx=5, sticky='w')
 
     def handle_save_button(self):
         self.grab_release()
