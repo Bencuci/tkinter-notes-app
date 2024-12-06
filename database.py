@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime
 import os
+import csv
 
 class DatabaseCRUD:
     DB_NAME = "notes.db"
@@ -275,3 +276,33 @@ class DatabaseCRUD:
                 raise InputValidationError("Save location must be a valid directory path.")
 
 
+
+class ExportTools:
+    @staticmethod
+    def export_notes_to_csv(file_path="notes_export.csv"):
+        notes = DatabaseCRUD.get_notes()
+        if not notes:
+            print("No notes to export.")
+            return False
+
+        try:
+            with open(file_path, mode='w', newline='', encoding='utf-8') as csvfile:
+                writer = csv.writer(csvfile)
+
+                # write header
+                writer.writerow(["ID", "Title", "Content", "Date Added", "Date Last Edited"])
+
+                # write note rows
+                for note in notes:
+                    writer.writerow([
+                        note['id'],
+                        note['title'],
+                        note['content'],
+                        note['date_added'],
+                        note['date_last_edited']
+                    ])
+            print(f"Notes successfully exported to {file_path}")
+            return True
+        except Exception as e:
+            print(f"Error exporting notes: {e}")
+            return False
