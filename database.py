@@ -59,6 +59,12 @@ class DatabaseCRUD:
     # add new note, return id
     @staticmethod
     def add_note(title, content):
+        try:
+            validate_note_data(title, content)
+        except InputValidationError as e:
+            print(f"Validation Error: {e}")
+            return False
+
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -255,3 +261,15 @@ class DatabaseCRUD:
             raise InputValidationError("Title must be a non-empty string.")
         if not isinstance(content, str):
             raise InputValidationError("Content must be a string.")
+
+    # settings input validation
+    def validate_settings(font_size=None, font_family=None, save_location=None):
+        if font_size is not None:
+            if not isinstance(font_size, int) or font_size < 8 or font_size > 72:
+                raise InputValidationError("Font size must be an integer between 8 and 72.")
+        if font_family is not None:
+            if not isinstance(font_family, str) or len(font_family.strip()) == 0:
+                raise InputValidationError("Font family must be a non-empty string.")
+        if save_location is not None:
+            if not os.path.isdir(save_location):
+                raise InputValidationError("Save location must be a valid directory path.")
