@@ -113,6 +113,7 @@ class ListNotesWindow(tk.Toplevel):
         self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
+        self.note_ids = {}
     
     def create_widgets(self):
         self.title_label = ttk.Label(self, text="List of Notes", font=("Helvetica", 16))
@@ -146,6 +147,12 @@ class ListNotesWindow(tk.Toplevel):
         selected_note = self.notes_list.curselection()
         if selected_note:
             note = self.notes_list.get(selected_note)
+
+    def load_notes(self):
+        notes = DatabaseCRUD.get_notes()
+        self.note_ids = {note["title"]: note["id"] for note in notes}
+        for note in notes:
+            self.notes_list.insert(tk.END, note["title"])
 
     def open_window(self):
         self.mainloop()
