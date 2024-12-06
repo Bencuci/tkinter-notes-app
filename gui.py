@@ -134,7 +134,7 @@ class ListNotesWindow(tk.Toplevel):
     def handle_edit_button(self):
         selected_note = self.notes_list.curselection()
         if selected_note:
-            note = self.notes_list.get(selected_note)
+            note = DatabaseCRUD.get_note(self.note_ids[self.notes_list.get(selected_note)])
             if 'edit_note' in self.parent.child_windows and self.parent.child_windows['edit_note'].winfo_exists():
                 self.parent.child_windows['edit_note'].lift()
                 self.parent.child_windows['edit_note'].focus_force()
@@ -154,6 +154,61 @@ class ListNotesWindow(tk.Toplevel):
         self.note_ids = {note["title"]: note["id"] for note in notes}
         for note in notes:
             self.notes_list.insert(tk.END, note["title"])
+
+    def open_window(self):
+        self.mainloop()
+
+    def on_closing(self):
+        self.grab_release()
+        self.destroy()
+
+class EditNoteWindow(tk.Toplevel):
+    def __init__(self, parent, note):
+        super().__init__(parent)
+        self.parent = parent
+        self.note = note
+        self.title("Edit Note")
+        self.transient(parent)
+        self.grab_set()
+        self.focus_force()
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 350)
+        self.geometry(dimensions)
+        self.create_widgets()
+        self.create_layout()
+        self.populate_fields()
+    
+    def create_widgets(self):
+        self.title_label = ttk.Label(self, text="Edit Note", font=("Helvetica", 16))
+        self.note_title_label = ttk.Label(self, text="Title")
+        self.note_title = ttk.Entry(self)
+        self.note_content_label = ttk.Label(self, text="Content")
+        self.note_content= tk.Text(self, height=10, width=40)
+        self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
+        self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
+    
+    def create_layout(self):
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.title_label.grid(row=0, columnspan=2, pady=(20,10))
+        self.note_title_label.grid(row=1, column=0, sticky='w', padx=20)
+        self.note_title.grid(row=2, columnspan=2, sticky='ew', padx=20)
+        self.note_content_label.grid(row=3, column=0, sticky='w', padx=20)
+        self.note_content.grid(row=4, columnspan=2, sticky='ew', padx=20)
+        self.save_button.grid(row=5, column=0, sticky='e', padx=5, pady=20)
+        self.cancel_button.grid(row=5, column=1, sticky='w', padx=5, pady=20)
+
+    def handle_save_button(self):
+        title = self.note_title.get()
+        content = self.note_content.get("1.0", tk.END)
+        DatabaseCRUD.update_note(self.note["id"], title, content)
+        self.grab_release()
+        response = messagebox.showinfo("Success", "Note updated successfully!")
+        self.destroy()
+
+    def populate_fields(self):
+        self.note_title.insert(0, self.note["title"])
+        self.note_content.insert(tk.END, self.note["content"])
 
     def open_window(self):
         self.mainloop()
