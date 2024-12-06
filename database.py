@@ -5,9 +5,9 @@ import os
 class DatabaseCRUD:
     DB_NAME = "notes.db"
 
+    # error handling and initializing database connection
     @staticmethod
     def _get_connection():
-        # error handling and initializing database connection
         try:
             conn = sqlite3.connect(DatabaseCRUD.DB_NAME)
             return conn
@@ -15,6 +15,7 @@ class DatabaseCRUD:
             print(f"Error connecting to database: {e}")
             return None
 
+    # create necessary tables
     @staticmethod
     def initialize_database():
         conn = DatabaseCRUD._get_connection()
@@ -55,9 +56,9 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # add new note, return id
     @staticmethod
     def add_note(title, content):
-        # add new note, return id
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -75,9 +76,9 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # edit the existing note
     @staticmethod
     def edit_note(note_id, title, content):
-        # edit the existing note
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -96,9 +97,9 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # delete note by id
     @staticmethod
     def delete_note(note_id):
-        # delete note by id
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -112,9 +113,9 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # save font size
     @staticmethod
     def save_font_size(new_font_size):
-        # save font size
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -128,9 +129,9 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # save font family
     @staticmethod
     def save_font_family(new_font_family):
-        # save font family
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -144,9 +145,9 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # save "default save location" 
     @staticmethod
     def save_default_save_location(new_default_save_location):
-        # save "default save location" 
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -161,9 +162,9 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # get all notes as list of dictionaries
     @staticmethod
     def get_notes():
-        # get all notes as list of dictionaries
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -178,9 +179,9 @@ class DatabaseCRUD:
                 conn.close()
         return []
 
+    # get note by id
     @staticmethod
     def get_note(note_id):
-        # get note by id
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -195,9 +196,9 @@ class DatabaseCRUD:
                 conn.close()
         return None
 
+    # get font size
     @staticmethod
     def get_font_size():
-        # get font size
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -211,9 +212,9 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # get font family
     @staticmethod
     def get_font_family():
-        # get font family
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -227,9 +228,9 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # get default save location
     @staticmethod
     def get_default_save_location():
-        # get default save location
         conn = DatabaseCRUD._get_connection()
         if conn:
             try:
@@ -242,3 +243,15 @@ class DatabaseCRUD:
             finally:
                 conn.close()
         return False
+
+    # validation methods
+    class InputValidationError(Exception):
+        """Custom exception for input validation errors."""
+        pass
+
+    def validate_note_data(title, content):
+        """Validates title and content for notes."""
+        if not title or not isinstance(title, str) or len(title.strip()) == 0:
+            raise InputValidationError("Title must be a non-empty string.")
+        if not isinstance(content, str):
+            raise InputValidationError("Content must be a string.")
