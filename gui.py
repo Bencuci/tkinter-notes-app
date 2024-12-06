@@ -1,12 +1,17 @@
 import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+from window_utils import center_window
+
+SCREEN_WIDTH = 1366 
+SCREEN_HEIGHT = 768
 
 class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Welcome")
-        self.geometry("300x200")
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 300, 200)
+        self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
     
@@ -27,7 +32,8 @@ class NewNoteWindow(tk.Toplevel):
     def __init__(self):
         super().__init__()
         self.title("New Note")
-        self.geometry("400x300")
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 300)
+        self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
     
