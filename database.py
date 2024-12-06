@@ -244,13 +244,13 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
-    # validation methods
+    # Validation Methods
+    # exception class for input validation errors
     class InputValidationError(Exception):
-        """Custom exception for input validation errors."""
         pass
 
+    # title and content validation
     def validate_note_data(title, content):
-        """Validates title and content for notes."""
         if not title or not isinstance(title, str) or len(title.strip()) == 0:
             raise InputValidationError("Title must be a non-empty string.")
         if not isinstance(content, str):
