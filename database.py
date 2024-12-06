@@ -273,3 +273,5 @@ class DatabaseCRUD:
         if save_location is not None:
             if not os.path.isdir(save_location):
                 raise InputValidationError("Save location must be a valid directory path.")
+
+
