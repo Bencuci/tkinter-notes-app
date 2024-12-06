@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import ttk
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -21,6 +22,5 @@ class MainWindow(tk.Tk):
 
     def open_window(self):
         self.mainloop()
-
 
 MainWindow().open_window()
