@@ -11,6 +11,7 @@ class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Welcome")
+        self.style = ttk.Style(theme='superhero')
         dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 300, 200)
         self.geometry(dimensions)
         self.create_widgets()
