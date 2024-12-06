@@ -103,6 +103,7 @@ class NewNoteWindow(tk.Toplevel):
 class ListNotesWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
+        self.note_ids = {}
         self.parent = parent
         self.title("List Notes")
         self.transient(parent)
@@ -113,7 +114,7 @@ class ListNotesWindow(tk.Toplevel):
         self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
-        self.note_ids = {}
+        self.load_notes()
     
     def create_widgets(self):
         self.title_label = ttk.Label(self, text="List of Notes", font=("Helvetica", 16))
