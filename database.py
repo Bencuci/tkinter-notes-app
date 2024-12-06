@@ -61,7 +61,7 @@ class DatabaseCRUD:
     @staticmethod
     def add_note(title, content):
         try:
-            validate_note_data(title, content)
+            DatabaseCRUD.validate_note_data(title, content)
         except InputValidationError as e:
             print(f"Validation Error: {e}")
             return False
@@ -251,10 +251,7 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
-    # Validation Methods
-    # exception class for input validation errors
-    class InputValidationError(Exception):
-        pass
+    
 
     # title and content validation
     def validate_note_data(title, content):
@@ -306,3 +303,9 @@ class ExportTools:
         except Exception as e:
             print(f"Error exporting notes: {e}")
             return False
+
+# Validation Methods
+# exception class for input validation errors
+class InputValidationError(Exception):
+    pass
+
