@@ -3,9 +3,12 @@ from tkinter import messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from window_utils import center_window
+from database import DatabaseCRUD
 
 SCREEN_WIDTH = 1366 
 SCREEN_HEIGHT = 768
+
+DatabaseCRUD.initialize_database()
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -56,27 +59,35 @@ class NewNoteWindow(tk.Toplevel):
         self.grab_set() # Make modal
         self.focus_force() # Ensure focus
         self.protocol("WM_DELETE_WINDOW", self.on_closing) # Handle window close
-        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 300)
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 350)
         self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
     
     def create_widgets(self):
         self.title_label = ttk.Label(self, text="Create a New Note", font=("Helvetica", 16))
-        self.note_text = tk.Text(self, height=10, width=40)
+        self.note_title_label = ttk.Label(self, text="Title")
+        self.note_title = ttk.Entry(self)
+        self.note_content_label = ttk.Label(self, text="Content")
+        self.note_content= tk.Text(self, height=10, width=40)
         self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
         self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
     
     def create_layout(self):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
-        
-        self.title_label.grid(row=0, column=0, pady=10, padx=5, columnspan=2, sticky='n')
-        self.note_text.grid(row=1, column=0, pady=10, padx=5, columnspan=2)
-        self.save_button.grid(row=2, column=0, pady=10, padx=5, sticky='e')
-        self.cancel_button.grid(row=2, column=1, pady=10, padx=5, sticky='w')
+        self.title_label.grid(row=0, columnspan=2, pady=(20,10))
+        self.note_title_label.grid(row=1, column=0, sticky='w', padx=20)
+        self.note_title.grid(row=2, columnspan=2, sticky='ew', padx=20)
+        self.note_content_label.grid(row=3, column=0, sticky='w', padx=20)
+        self.note_content.grid(row=4, columnspan=2, sticky='ew', padx=20)
+        self.save_button.grid(row=5, column=0, sticky='e', padx=5, pady=20)
+        self.cancel_button.grid(row=5, column=1, sticky='w', padx=5, pady=20)
 
     def handle_save_button(self):
+        title = self.note_title.get()
+        content = self.note_content.get("1.0", tk.END)
+        DatabaseCRUD.add_note(title, content)
         self.grab_release()
         response = messagebox.showinfo("Success", "Note saved successfully!")
         self.destroy()
@@ -142,7 +153,6 @@ class ListNotesWindow(tk.Toplevel):
     def on_closing(self):
         self.grab_release()
         self.destroy()
-
 
 root = MainWindow()
 root.open_window()
