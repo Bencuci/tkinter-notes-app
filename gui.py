@@ -256,6 +256,7 @@ class SettingsWindow(tk.Toplevel):
         self.font_family_var = tk.StringVar()
         self.font_family_var.set(str(DatabaseCRUD.get_font_family()))
         self.theme_combobox = ttk.Combobox(self, textvariable=self.theme_var, values=THEMES)
+        self.theme_combobox.bind("<<ComboboxSelected>>", self.handle_theme_selection)
         self.font_size_combobox = ttk.Combobox(self, textvariable=self.font_size_var, values=['10', '12', '14', '16', '18', '20'])
         self.font_family_combobox = ttk.Combobox(self, textvariable=self.font_family_var, values=['Helvetica', 'Arial', 'Times New Roman', 'Courier New'])
         self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
@@ -274,13 +275,15 @@ class SettingsWindow(tk.Toplevel):
         self.save_button.grid(row=4, column=0, sticky='we', padx=5, pady=20)
         self.cancel_button.grid(row=4, column=1, sticky='we', padx=5, pady=20)
 
-    def handle_save_button(self):
+    def handle_theme_selection(self, event):
         theme = self.theme_var.get()
+        self.parent.style.theme_use(theme)
+
+    def handle_save_button(self):
         font_size = int(self.font_size_var.get())
         font_family = self.font_family_var.get()
         DatabaseCRUD.save_font_size(font_size)
         DatabaseCRUD.save_font_family(font_family)
-        self.parent.style.theme_use(theme)
         self.grab_release()
         response = messagebox.showinfo("Success", "Settings updated successfully!")
         self.destroy()
