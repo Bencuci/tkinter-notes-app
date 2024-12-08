@@ -201,7 +201,7 @@ class EditNoteWindow(tk.Toplevel):
     def handle_save_button(self):
         title = self.note_title.get()
         content = self.note_content.get("1.0", tk.END)
-        DatabaseCRUD.update_note(self.note["id"], title, content)
+        DatabaseCRUD.edit_note(self.note["id"], title, content)
         self.grab_release()
         response = messagebox.showinfo("Success", "Note updated successfully!")
         self.destroy()
