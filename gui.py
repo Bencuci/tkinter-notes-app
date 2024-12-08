@@ -91,11 +91,12 @@ class NewNoteWindow(tk.Toplevel):
     def create_layout(self):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(4, weight=1)
         self.title_label.grid(row=0, columnspan=2, pady=(20,10))
         self.note_title_label.grid(row=1, column=0, sticky='w', padx=20)
         self.note_title.grid(row=2, columnspan=2, sticky='ew', padx=20)
         self.note_content_label.grid(row=3, column=0, sticky='w', padx=20)
-        self.note_content.grid(row=4, columnspan=2, sticky='ew', padx=20)
+        self.note_content.grid(row=4, columnspan=2, sticky='nsew', padx=20)
         self.save_button.grid(row=5, column=0, sticky='e', padx=5, pady=20)
         self.cancel_button.grid(row=5, column=1, sticky='w', padx=5, pady=20)
 
@@ -200,18 +201,19 @@ class EditNoteWindow(tk.Toplevel):
         self.note_title_label = ttk.Label(self, text="Title")
         self.note_title = ttk.Entry(self)
         self.note_content_label = ttk.Label(self, text="Content")
-        self.note_content= tk.Text(self, height=10, width=40)
+        self.note_content= tk.Text(self)
         self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
         self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
     
     def create_layout(self):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(4, weight=1)
         self.title_label.grid(row=0, columnspan=2, pady=(20,10))
         self.note_title_label.grid(row=1, column=0, sticky='w', padx=20)
         self.note_title.grid(row=2, columnspan=2, sticky='ew', padx=20)
         self.note_content_label.grid(row=3, column=0, sticky='w', padx=20)
-        self.note_content.grid(row=4, columnspan=2, sticky='ew', padx=20)
+        self.note_content.grid(row=4, columnspan=2, sticky='nsew', padx=20)
         self.save_button.grid(row=5, column=0, sticky='e', padx=5, pady=20)
         self.cancel_button.grid(row=5, column=1, sticky='w', padx=5, pady=20)
 
