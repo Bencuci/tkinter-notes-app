@@ -26,13 +26,15 @@ class MainWindow(tk.Tk):
         self.title_label = ttk.Label(self, text="Welcome to Notes!", font=("Helvetica", 16))
         self.new_note_button = ttk.Button(self, text="New Note", command=self.handle_new_note_button)
         self.list_notes_button = ttk.Button(self, text="List Notes", command=self.handle_list_notes_button)
-        self.settings_button = ttk.Button(self, text="Settings", command=self.handle_settings_button)
+        self.settings_button = ttk.Button(self, text="Settings", command=self.handle_settings_button, bootstyle='secondary')
+        self.exit_button = ttk.Button(self, text="Exit", command=self.quit, bootstyle='danger')
 
     def create_layout(self):
         self.title_label.pack(pady=10)
         self.new_note_button.pack(pady=5)
         self.list_notes_button.pack(pady=5)
         self.settings_button.pack(pady=5)
+        self.exit_button.pack(pady=5)
 
     def handle_settings_button(self):
         if 'settings' in self.child_windows and self.child_windows['settings'].winfo_exists():
