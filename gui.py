@@ -110,7 +110,7 @@ class ListNotesWindow(tk.Toplevel):
         self.grab_set()
         self.focus_force()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 300)
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 325)
         self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
@@ -121,6 +121,7 @@ class ListNotesWindow(tk.Toplevel):
         self.notes_list = tk.Listbox(self, height=10, width=40)
         self.edit_button = ttk.Button(self, text="Edit", command=self.handle_edit_button)
         self.delete_button = ttk.Button(self, text="Delete", command=self.handle_delete_button)
+        self.go_back_button = ttk.Button(self, text="Go Back", command=self.on_closing, bootstyle='secondary')
     
     def create_layout(self):
         self.grid_columnconfigure(0, weight=1)
@@ -130,6 +131,7 @@ class ListNotesWindow(tk.Toplevel):
         self.notes_list.grid(row=1, column=0, pady=10, padx=5, columnspan=2)
         self.edit_button.grid(row=2, column=0, pady=10, padx=5, sticky='e')
         self.delete_button.grid(row=2, column=1, pady=10, padx=5, sticky='w')
+        self.go_back_button.grid(row=3, column=0, pady=10, padx=5, columnspan=2)
 
     def handle_edit_button(self):
         selected_note = self.notes_list.curselection()
