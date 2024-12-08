@@ -255,10 +255,10 @@ class SettingsWindow(tk.Toplevel):
         self.font_family_label = ttk.Label(self, text="Font Family")
         self.font_family_var = tk.StringVar()
         self.font_family_var.set(str(DatabaseCRUD.get_font_family()))
-        self.theme_combobox = ttk.Combobox(self, textvariable=self.theme_var, values=THEMES)
+        self.theme_combobox = ttk.Combobox(self, textvariable=self.theme_var, values=THEMES, state='readonly')
         self.theme_combobox.bind("<<ComboboxSelected>>", self.handle_theme_selection)
         self.font_size_combobox = ttk.Combobox(self, textvariable=self.font_size_var, values=['10', '12', '14', '16', '18', '20'])
-        self.font_family_combobox = ttk.Combobox(self, textvariable=self.font_family_var, values=['Helvetica', 'Arial', 'Times New Roman', 'Courier New'])
+        self.font_family_combobox = ttk.Combobox(self, textvariable=self.font_family_var, values=['Helvetica', 'Arial', 'Times New Roman', 'Courier New'], state='readonly')
         self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
         self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
     
