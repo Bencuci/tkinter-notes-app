@@ -103,9 +103,12 @@ class NewNoteWindow(tk.Toplevel):
     def handle_save_button(self):
         title = self.note_title.get()
         content = self.note_content.get("1.0", tk.END)
-        DatabaseCRUD.add_note(title, content)
+        success = DatabaseCRUD.add_note(title, content)
         self.grab_release()
-        response = messagebox.showinfo("Success", "Note saved successfully!")
+        if not success:
+            messagebox.showerror("Error", "Failed to save note!")
+        else:
+            messagebox.showinfo("Success", "Note saved successfully!")
         self.destroy()
 
     def open_window(self):
@@ -160,7 +163,7 @@ class ListNotesWindow(tk.Toplevel):
                 edit_note_window = EditNoteWindow(self, note)
                 self.parent.child_windows['edit_note'] = edit_note_window
         else:
-            response = messagebox.showerror("Error", "No note selected!")
+            messagebox.showerror("Error", "No note selected!")
 
     def handle_delete_button(self):
         selected_note = self.notes_list.curselection()
@@ -168,12 +171,12 @@ class ListNotesWindow(tk.Toplevel):
             note = self.notes_list.get(selected_note)
             success = DatabaseCRUD.delete_note(self.note_ids[note])
             if success:
-                response = messagebox.showinfo("Success", "Note deleted successfully!")
+                messagebox.showinfo("Success", "Note deleted successfully!")
             else:
-                response = messagebox.showerror("Error", "Failed to delete note!")
+                messagebox.showerror("Error", "Failed to delete note!")
             self.notes_list.delete(selected_note)
         else:
-            response = messagebox.showerror("Error", "No note selected!")
+            messagebox.showerror("Error", "No note selected!")
 
     def load_notes(self):
         notes = DatabaseCRUD.get_notes()
@@ -228,9 +231,12 @@ class EditNoteWindow(tk.Toplevel):
     def handle_save_button(self):
         title = self.note_title.get()
         content = self.note_content.get("1.0", tk.END)
-        DatabaseCRUD.edit_note(self.note["id"], title, content)
+        success = DatabaseCRUD.edit_note(self.note["id"], title, content)
+        if success:
+            messagebox.showinfo("Success", "Note updated successfully!")
+        else:
+            messagebox.showerror("Error", "Failed to update note!")
         self.grab_release()
-        response = messagebox.showinfo("Success", "Note updated successfully!")
         self.destroy()
 
     def populate_fields(self):
@@ -296,10 +302,15 @@ class SettingsWindow(tk.Toplevel):
     def handle_save_button(self):
         font_size = int(self.font_size_var.get())
         font_family = self.font_family_var.get()
-        DatabaseCRUD.save_font_size(font_size)
-        DatabaseCRUD.save_font_family(font_family)
+        success_font_size = DatabaseCRUD.save_font_size(font_size)
+        if not success_font_size:
+            messagebox.showerror("Error", "Failed to save font size!")
+        success_font_family = DatabaseCRUD.save_font_family(font_family)
+        if not success_font_family :
+            messagebox.showerror("Error", "Failed to save font family!")
+        if success_font_size and success_font_family:
+            messagebox.showinfo("Success", "Settings saved successfully!")
         self.grab_release()
-        response = messagebox.showinfo("Success", "Settings updated successfully!")
         self.destroy()
 
     def open_window(self):
