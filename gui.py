@@ -16,7 +16,7 @@ class MainWindow(tk.Tk):
         super().__init__()
         self.title("Welcome")
         self.style = ttk.Style(theme='superhero')
-        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 300, 200)
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 300, 110)
         self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
@@ -30,11 +30,13 @@ class MainWindow(tk.Tk):
         self.exit_button = ttk.Button(self, text="Exit", command=self.quit, bootstyle='danger')
 
     def create_layout(self):
-        self.title_label.pack(pady=10)
-        self.new_note_button.pack(pady=5)
-        self.list_notes_button.pack(pady=5)
-        self.settings_button.pack(pady=5)
-        self.exit_button.pack(pady=5)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.title_label.grid(row=0, columnspan=2, pady=10)
+        self.new_note_button.grid(row=1, column=0, pady=5, padx=5, sticky='nswe')
+        self.list_notes_button.grid(row=1, column=1, pady=5, padx=5, sticky='nswe')
+        self.settings_button.grid(row=2, column=0, pady=5, padx=5, sticky='nswe')
+        self.exit_button.grid(row=2, column=1, pady=5, padx=5, sticky='nswe')
 
     def handle_settings_button(self):
         if 'settings' in self.child_windows and self.child_windows['settings'].winfo_exists():
