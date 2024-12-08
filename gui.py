@@ -5,8 +5,11 @@ from ttkbootstrap.constants import *
 from window_utils import center_window
 from database import DatabaseCRUD
 
-SCREEN_WIDTH = 1366 
-SCREEN_HEIGHT = 768
+temp_tk = tk.Tk()
+SCREEN_WIDTH = temp_tk.winfo_screenwidth()
+SCREEN_HEIGHT = temp_tk.winfo_screenheight()
+temp_tk.destroy()
+
 THEMES = ['superhero', 'darkly', 'solar', 'cyborg', 'vapor', 'cosmo', 'flatly', 'journal', 'litera', 'lumen', 'minty', 'pulse', 'sandstone', 'united', 'yeti', 'morph', 'simplex', 'cerculean']
 
 DatabaseCRUD.initialize_database()
