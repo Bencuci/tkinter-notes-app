@@ -7,6 +7,7 @@ from database import DatabaseCRUD
 
 SCREEN_WIDTH = 1366 
 SCREEN_HEIGHT = 768
+THEMES = ['superhero', 'darkly', 'solar', 'cyborg', 'vapor', 'cosmo', 'flatly', 'journal', 'litera', 'lumen', 'minty', 'pulse', 'sandstone', 'united', 'yeti', 'morph', 'simplex', 'cerculean']
 
 DatabaseCRUD.initialize_database()
 
@@ -25,11 +26,21 @@ class MainWindow(tk.Tk):
         self.title_label = ttk.Label(self, text="Welcome to Notes!", font=("Helvetica", 16))
         self.new_note_button = ttk.Button(self, text="New Note", command=self.handle_new_note_button)
         self.list_notes_button = ttk.Button(self, text="List Notes", command=self.handle_list_notes_button)
+        self.settings_button = ttk.Button(self, text="Settings", command=self.handle_settings_button)
 
     def create_layout(self):
         self.title_label.pack(pady=10)
-        self.new_note_button.pack(pady=10)
-        self.list_notes_button.pack(pady=10)
+        self.new_note_button.pack(pady=5)
+        self.list_notes_button.pack(pady=5)
+        self.settings_button.pack(pady=5)
+
+    def handle_settings_button(self):
+        if 'settings' in self.child_windows and self.child_windows['settings'].winfo_exists():
+            self.child_windows['settings'].lift()
+            self.child_windows['settings'].focus_force()
+        else:
+            settings_window = SettingsWindow(self)
+            self.child_windows['settings'] = settings_window
 
     def handle_new_note_button(self):
         if 'new_note' in self.child_windows and self.child_windows['new_note'].winfo_exists():
@@ -218,6 +229,65 @@ class EditNoteWindow(tk.Toplevel):
     def on_closing(self):
         self.grab_release()
         self.destroy()
+
+class SettingsWindow(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.title("Settings")
+        self.transient(parent)
+        self.grab_set()
+        self.focus_force()
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 200)
+        self.geometry(dimensions)
+        self.create_widgets()
+        self.create_layout()
+    
+    def create_widgets(self):
+        self.title_label = ttk.Label(self, text="Settings", font=("Helvetica", 16))
+        self.theme_label = ttk.Label(self, text="Theme")
+        self.theme_var = tk.StringVar()
+        self.theme_var.set(self.parent.style.theme_use())
+        self.font_size_label = ttk.Label(self, text="Font Size")
+        self.font_size_var = tk.StringVar()
+        self.font_size_var.set("12")
+        self.font_family_label = ttk.Label(self, text="Font Family")
+        self.font_family_var = tk.StringVar()
+        self.font_family_var.set("Helvetica")
+        self.theme_combobox = ttk.Combobox(self, textvariable=self.theme_var, values=THEMES)
+        self.font_size_combobox = ttk.Combobox(self, textvariable=self.font_size_var, values=['10', '12', '14', '16', '18', '20'])
+        self.font_family_combobox = ttk.Combobox(self, textvariable=self.font_family_var, values=['Helvetica', 'Arial', 'Times New Roman', 'Courier New'])
+        self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
+        self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
+    
+    def create_layout(self):
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.title_label.grid(row=0, columnspan=2, pady=(20,10))
+        self.theme_label.grid(row=1, column=0, sticky='w', padx=20)
+        self.theme_combobox.grid(row=1, column=1, sticky='ew', padx=20)
+        self.font_size_label.grid(row=2, column=0, sticky='w', padx=20)
+        self.font_size_combobox.grid(row=2, column=1, sticky='ew', padx=20)
+        self.font_family_label.grid(row=3, column=0, sticky='w', padx=20)
+        self.font_family_combobox.grid(row=3, column=1, sticky='ew', padx=20)
+        self.save_button.grid(row=4, column=0, sticky='we', padx=5, pady=20)
+        self.cancel_button.grid(row=4, column=1, sticky='we', padx=5, pady=20)
+
+    def handle_save_button(self):
+        theme = self.theme_var.get()
+        self.parent.style.theme_use(theme)
+        self.grab_release()
+        response = messagebox.showinfo("Success", "Settings updated successfully!")
+        self.destroy()
+
+    def open_window(self):
+        self.mainloop()
+
+    def on_closing(self):
+        self.grab_release()
+        self.destroy()
+
 
 root = MainWindow()
 root.open_window()
