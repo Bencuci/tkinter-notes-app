@@ -19,7 +19,7 @@ class MainWindow(tk.Tk):
         super().__init__()
         self.title("Welcome")
         self.style = ttk.Style(theme='superhero')
-        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 300, 110)
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 300, 150)
         self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
@@ -30,6 +30,7 @@ class MainWindow(tk.Tk):
         self.new_note_button = ttk.Button(self, text="New Note", command=self.handle_new_note_button)
         self.list_notes_button = ttk.Button(self, text="List Notes", command=self.handle_list_notes_button)
         self.settings_button = ttk.Button(self, text="Settings", command=self.handle_settings_button, bootstyle='secondary')
+        self.help_button = ttk.Button(self, text="Help", command=self.handle_help_button, bootstyle='info')
         self.exit_button = ttk.Button(self, text="Exit", command=self.quit, bootstyle='danger')
 
     def create_layout(self):
@@ -39,7 +40,8 @@ class MainWindow(tk.Tk):
         self.new_note_button.grid(row=1, column=0, pady=5, padx=5, sticky='nswe')
         self.list_notes_button.grid(row=1, column=1, pady=5, padx=5, sticky='nswe')
         self.settings_button.grid(row=2, column=0, pady=5, padx=5, sticky='nswe')
-        self.exit_button.grid(row=2, column=1, pady=5, padx=5, sticky='nswe')
+        self.help_button.grid(row=2, column=1, pady=5, padx=5, sticky='nswe')
+        self.exit_button.grid(row=3, column=0, pady=5, padx=5, sticky='nswe', columnspan=2)
 
     def handle_settings_button(self):
         if 'settings' in self.child_windows and self.child_windows['settings'].winfo_exists():
@@ -56,6 +58,17 @@ class MainWindow(tk.Tk):
         else:
             new_note_window = NewNoteWindow(self)
             self.child_windows['new_note'] = new_note_window
+
+    def handle_help_button(self):
+        messagebox.showinfo("Help", """This is a basic noting app made using Tkinter.
+        Here are the current features included in the app: 
+        - Create a new note
+        - List all notes
+        - Edit a note
+        - Delete a note
+        - Change settings
+
+        Note: Changing the font size and font family applies to text entry fields while adding or editing notes.""")
 
     def handle_list_notes_button(self):
         if 'list_notes' in self.child_windows and self.child_windows['list_notes'].winfo_exists():
