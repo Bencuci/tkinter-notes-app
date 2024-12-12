@@ -171,13 +171,17 @@ class ListNotesWindow(tk.Toplevel):
     def handle_delete_button(self):
         selected_note = self.notes_list.curselection()
         if selected_note:
-            note = self.notes_list.get(selected_note)
-            success = DatabaseCRUD.delete_note(self.note_ids[note])
-            if success:
-                messagebox.showinfo("Success", "Note deleted successfully!")
+            confirm = messagebox.askyesno("Delete Note", "Are you sure you want to delete this note?")
+            if not confirm:
+                return
             else:
-                messagebox.showerror("Error", "Failed to delete note!")
-            self.notes_list.delete(selected_note)
+                note = self.notes_list.get(selected_note)
+                success = DatabaseCRUD.delete_note(self.note_ids[note])
+                if success:
+                    messagebox.showinfo("Success", "Note deleted successfully!")
+                else:
+                    messagebox.showerror("Error", "Failed to delete note!")
+                self.notes_list.delete(selected_note)
         else:
             messagebox.showerror("Error", "No note selected!")
 
