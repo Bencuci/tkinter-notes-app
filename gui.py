@@ -85,9 +85,9 @@ class NewNoteWindow(tk.Toplevel):
     def create_widgets(self):
         self.title_label = ttk.Label(self, text="Create a New Note", font=("Helvetica", 16))
         self.note_title_label = ttk.Label(self, text="Title")
-        self.note_title = ttk.Entry(self)
+        self.note_title = ttk.Entry(self, font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
         self.note_content_label = ttk.Label(self, text="Content")
-        self.note_content= tk.Text(self, height=10, width=40, font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
+        self.note_content= tk.Text(self, font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
         self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
         self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
     
@@ -211,11 +211,11 @@ class EditNoteWindow(tk.Toplevel):
         self.populate_fields()
     
     def create_widgets(self):
-        self.title_label = ttk.Label(self, text="Edit Note", font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
+        self.title_label = ttk.Label(self, text="Edit Note", font=("Helvetica", 16))
         self.note_title_label = ttk.Label(self, text="Title")
-        self.note_title = ttk.Entry(self)
+        self.note_title = ttk.Entry(self, font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
         self.note_content_label = ttk.Label(self, text="Content")
-        self.note_content= tk.Text(self)
+        self.note_content= tk.Text(self, font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
         self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
         self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
     
