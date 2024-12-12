@@ -21,7 +21,7 @@ class MainWindow(tk.Tk):
         super().__init__()
         self.title(lang.trn.get("notes_app"))
         self.style = ttk.Style(theme='superhero')
-        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 300, 150)
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 150)
         self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
@@ -75,6 +75,15 @@ class MainWindow(tk.Tk):
     def open_window(self):
         self.mainloop()
 
+    def update_translations(self):
+        self.title(lang.trn.get("notes_app"))
+        self.title_label.config(text=lang.trn.get("welcome"))
+        self.new_note_button.config(text=lang.trn.get("new_note"))
+        self.list_notes_button.config(text=lang.trn.get("list_notes"))
+        self.settings_button.config(text=lang.trn.get("settings"))
+        self.help_button.config(text=lang.trn.get("help"))
+        self.exit_button.config(text=lang.trn.get("exit"))
+
 class NewNoteWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
@@ -118,7 +127,7 @@ class NewNoteWindow(tk.Toplevel):
         if not success:
             messagebox.showerror("Error", lang.trn.get("failed_to_save"))
         else:
-            messagebox.showinfo("Success", lang.trn.get("saved_successfully"))
+            messagebox.showinfo("Success", lang.trn.get("saved_successfully")) 
         self.destroy()
 
     def open_window(self):
@@ -127,7 +136,6 @@ class NewNoteWindow(tk.Toplevel):
     def on_closing(self):
         self.grab_release()
         self.destroy()
-
 
 class ListNotesWindow(tk.Toplevel):
     def __init__(self, parent):
@@ -273,13 +281,17 @@ class SettingsWindow(tk.Toplevel):
         self.grab_set()
         self.focus_force()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 200)
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 450, 225)
         self.geometry(dimensions)
         self.create_widgets()
         self.create_layout()
     
     def create_widgets(self):
         self.title_label = ttk.Label(self, text=lang.trn.get("settings"), font=("Helvetica", 16))
+        self.language_label = ttk.Label(self, text=lang.trn.get("language_label"))
+        self.language_var = tk.StringVar()
+        self.language_var.set(lang.trn.get("language"))
+        self.language_combobox = ttk.Combobox(self, textvariable=self.language_var, values=['English', 'Türkçe'], state='readonly')
         self.theme_label = ttk.Label(self, text=lang.trn.get("theme"))
         self.theme_var = tk.StringVar()
         self.theme_var.set(self.parent.style.theme_use())
@@ -300,20 +312,29 @@ class SettingsWindow(tk.Toplevel):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.title_label.grid(row=0, columnspan=2, pady=(20,10))
-        self.theme_label.grid(row=1, column=0, sticky='w', padx=20)
-        self.theme_combobox.grid(row=1, column=1, sticky='ew', padx=20)
-        self.font_size_label.grid(row=2, column=0, sticky='w', padx=20)
-        self.font_size_combobox.grid(row=2, column=1, sticky='ew', padx=20)
-        self.font_family_label.grid(row=3, column=0, sticky='w', padx=20)
-        self.font_family_combobox.grid(row=3, column=1, sticky='ew', padx=20)
-        self.save_button.grid(row=4, column=0, sticky='we', padx=5, pady=20)
-        self.cancel_button.grid(row=4, column=1, sticky='we', padx=5, pady=20)
+        self.language_label.grid(row=1, column=0, sticky='w', padx=20)
+        self.language_combobox.grid(row=1, column=1, sticky='ew', padx=20)
+        self.theme_label.grid(row=2, column=0, sticky='w', padx=20)
+        self.theme_combobox.grid(row=2, column=1, sticky='ew', padx=20)
+        self.font_size_label.grid(row=3, column=0, sticky='w', padx=20)
+        self.font_size_combobox.grid(row=3, column=1, sticky='ew', padx=20)
+        self.font_family_label.grid(row=4, column=0, sticky='w', padx=20)
+        self.font_family_combobox.grid(row=4, column=1, sticky='ew', padx=20)
+        self.save_button.grid(row=5, column=0, sticky='we', padx=5, pady=20)
+        self.cancel_button.grid(row=5, column=1, sticky='we', padx=5, pady=20)
 
     def handle_theme_selection(self, event):
         theme = self.theme_var.get()
         self.parent.style.theme_use(theme)
 
     def handle_save_button(self):
+        global lang 
+        if self.language_var.get() == "Türkçe":
+            lang = I18N("tr")
+        elif self.language_var.get() == "English":
+            lang = I18N("en")
+        else:
+            lang = I18N("en") # default language is English
         font_size = int(self.font_size_var.get())
         font_family = self.font_family_var.get()
         success_font_size = DatabaseCRUD.save_font_size(font_size)
@@ -326,6 +347,7 @@ class SettingsWindow(tk.Toplevel):
             messagebox.showinfo(lang.trn.get("success"), lang.trn.get("settings_saved_successfully"))
         self.grab_release()
         self.destroy()
+        self.parent.update_translations()
 
     def open_window(self):
         self.mainloop()
