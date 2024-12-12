@@ -4,6 +4,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from window_utils import center_window
 from database import DatabaseCRUD
+from langpack import I18N
 
 temp_tk = tk.Tk()
 SCREEN_WIDTH = temp_tk.winfo_screenwidth()
@@ -13,11 +14,12 @@ temp_tk.destroy()
 THEMES = ['superhero', 'darkly', 'solar', 'cyborg', 'vapor', 'cosmo', 'flatly', 'journal', 'litera', 'lumen', 'minty', 'pulse', 'sandstone', 'united', 'yeti', 'morph', 'simplex', 'cerculean']
 
 DatabaseCRUD.initialize_database()
+lang = I18N("en")
 
 class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Welcome")
+        self.title(lang.trn.get("notes_app"))
         self.style = ttk.Style(theme='superhero')
         dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 300, 150)
         self.geometry(dimensions)
@@ -26,12 +28,12 @@ class MainWindow(tk.Tk):
         self.child_windows = {}
     
     def create_widgets(self):
-        self.title_label = ttk.Label(self, text="Welcome to Notes!", font=("Helvetica", 16))
-        self.new_note_button = ttk.Button(self, text="New Note", command=self.handle_new_note_button)
-        self.list_notes_button = ttk.Button(self, text="List Notes", command=self.handle_list_notes_button)
-        self.settings_button = ttk.Button(self, text="Settings", command=self.handle_settings_button, bootstyle='secondary')
-        self.help_button = ttk.Button(self, text="Help", command=self.handle_help_button, bootstyle='info')
-        self.exit_button = ttk.Button(self, text="Exit", command=self.quit, bootstyle='danger')
+        self.title_label = ttk.Label(self, text=lang.trn.get("welcome"), font=("Helvetica", 16))
+        self.new_note_button = ttk.Button(self, text=lang.trn.get("new_note"), command=self.handle_new_note_button)
+        self.list_notes_button = ttk.Button(self, text=lang.trn.get("list_notes"), command=self.handle_list_notes_button)
+        self.settings_button = ttk.Button(self, text=lang.trn.get("settings"), command=self.handle_settings_button, bootstyle='secondary')
+        self.help_button = ttk.Button(self, text=lang.trn.get("help"), command=self.handle_help_button, bootstyle='info')
+        self.exit_button = ttk.Button(self, text=lang.trn.get("exit"), command=self.quit, bootstyle='danger')
 
     def create_layout(self):
         self.grid_columnconfigure(0, weight=1)
@@ -60,15 +62,7 @@ class MainWindow(tk.Tk):
             self.child_windows['new_note'] = new_note_window
 
     def handle_help_button(self):
-        messagebox.showinfo("Help", """This is a basic noting app made using Tkinter.
-        Here are the current features included in the app: 
-        - Create a new note (using "New Note" button)
-        - List all notes (using "List Notes" button)
-        - Edit a note (from the list of notes)
-        - Delete a note (from the list of notes)
-        - Change settings (using "Settings" button)
-
-        Note: Changing the font size and font family from the settings applies to text entry fields while adding or editing notes.""")
+        messagebox.showinfo("Help", lang.trn.get("help_text").replace("\\n", "\n"))
 
     def handle_list_notes_button(self):
         if 'list_notes' in self.child_windows and self.child_windows['list_notes'].winfo_exists():
@@ -96,13 +90,13 @@ class NewNoteWindow(tk.Toplevel):
         self.create_layout()
     
     def create_widgets(self):
-        self.title_label = ttk.Label(self, text="Create a New Note", font=("Helvetica", 16))
-        self.note_title_label = ttk.Label(self, text="Title")
+        self.title_label = ttk.Label(self, text=lang.trn.get("add_new_note"), font=("Helvetica", 16))
+        self.note_title_label = ttk.Label(self, text=lang.trn.get("title"))
         self.note_title = ttk.Entry(self, font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
-        self.note_content_label = ttk.Label(self, text="Content")
+        self.note_content_label = ttk.Label(self, text=lang.trn.get("content"))
         self.note_content= tk.Text(self, font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
-        self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
-        self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
+        self.save_button = ttk.Button(self, text=lang.trn.get("save"), command=self.handle_save_button)
+        self.cancel_button = ttk.Button(self, text=lang.trn.get("cancel"), command=self.on_closing, bootstyle='secondary')
     
     def create_layout(self):
         self.grid_columnconfigure(0, weight=1)
@@ -122,9 +116,9 @@ class NewNoteWindow(tk.Toplevel):
         success = DatabaseCRUD.add_note(title, content)
         self.grab_release()
         if not success:
-            messagebox.showerror("Error", "Failed to save note!")
+            messagebox.showerror("Error", lang.trn.get("failed_to_save"))
         else:
-            messagebox.showinfo("Success", "Note saved successfully!")
+            messagebox.showinfo("Success", lang.trn.get("saved_successfully"))
         self.destroy()
 
     def open_window(self):
@@ -152,11 +146,11 @@ class ListNotesWindow(tk.Toplevel):
         self.load_notes()
     
     def create_widgets(self):
-        self.title_label = ttk.Label(self, text="List of Notes", font=("Helvetica", 16))
+        self.title_label = ttk.Label(self, text=lang.trn.get("your_notes"), font=("Helvetica", 16))
         self.notes_list = tk.Listbox(self, height=10, width=40)
-        self.edit_button = ttk.Button(self, text="Edit", command=self.handle_edit_button)
-        self.delete_button = ttk.Button(self, text="Delete", command=self.handle_delete_button)
-        self.go_back_button = ttk.Button(self, text="Go Back", command=self.on_closing, bootstyle='secondary')
+        self.edit_button = ttk.Button(self, text=lang.trn.get("edit_note"), command=self.handle_edit_button)
+        self.delete_button = ttk.Button(self, text=lang.trn.get("delete_note"), command=self.handle_delete_button)
+        self.go_back_button = ttk.Button(self, text=lang.trn.get("go_back"), command=self.on_closing, bootstyle='secondary')
     
     def create_layout(self):
         self.grid_columnconfigure(0, weight=1)
@@ -184,19 +178,19 @@ class ListNotesWindow(tk.Toplevel):
     def handle_delete_button(self):
         selected_note = self.notes_list.curselection()
         if selected_note:
-            confirm = messagebox.askyesno("Delete Note", "Are you sure you want to delete this note?")
+            confirm = messagebox.askyesno(lang.trn.get("delete_note"), lang.trn.get("are_you_sure_delete"))
             if not confirm:
                 return
             else:
                 note = self.notes_list.get(selected_note)
                 success = DatabaseCRUD.delete_note(self.note_ids[note])
                 if success:
-                    messagebox.showinfo("Success", "Note deleted successfully!")
+                    messagebox.showinfo(lang.trn.get("success"), lang.trn.get("deleted_successfully"))
                 else:
-                    messagebox.showerror("Error", "Failed to delete note!")
+                    messagebox.showerror("Error", lang.trn.get("failed_to_delete"))
                 self.notes_list.delete(selected_note)
         else:
-            messagebox.showerror("Error", "No note selected!")
+            messagebox.showerror("Error", lang.trn.get("no_note_selected"))
 
     def load_notes(self):
         notes = DatabaseCRUD.get_notes()
@@ -216,7 +210,7 @@ class EditNoteWindow(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.note = note
-        self.title("Edit Note")
+        self.title(lang.trn.get("edit_note"))
         self.transient(parent)
         self.grab_set()
         self.focus_force()
@@ -228,13 +222,13 @@ class EditNoteWindow(tk.Toplevel):
         self.populate_fields()
     
     def create_widgets(self):
-        self.title_label = ttk.Label(self, text="Edit Note", font=("Helvetica", 16))
-        self.note_title_label = ttk.Label(self, text="Title")
+        self.title_label = ttk.Label(self, text=lang.trn.get("edit_note"), font=("Helvetica", 16))
+        self.note_title_label = ttk.Label(self, text=lang.trn.get("title"))
         self.note_title = ttk.Entry(self, font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
-        self.note_content_label = ttk.Label(self, text="Content")
+        self.note_content_label = ttk.Label(self, text=lang.trn.get("content"))
         self.note_content= tk.Text(self, font=(DatabaseCRUD.get_font_family(), DatabaseCRUD.get_font_size()))
-        self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
-        self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
+        self.save_button = ttk.Button(self, text=lang.trn.get("save"), command=self.handle_save_button)
+        self.cancel_button = ttk.Button(self, text=lang.trn.get("cancel"), command=self.on_closing, bootstyle='secondary')
     
     def create_layout(self):
         self.grid_columnconfigure(0, weight=1)
@@ -253,9 +247,9 @@ class EditNoteWindow(tk.Toplevel):
         content = self.note_content.get("1.0", tk.END)
         success = DatabaseCRUD.edit_note(self.note["id"], title, content)
         if success:
-            messagebox.showinfo("Success", "Note updated successfully!")
+            messagebox.showinfo(lang.trn.get("success"), lang.trn.get("saved_successfully"))
         else:
-            messagebox.showerror("Error", "Failed to update note!")
+            messagebox.showerror("Error", lang.trn.get("failed_to_save"))
         self.grab_release()
         self.destroy()
 
@@ -274,7 +268,7 @@ class SettingsWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.title("Settings")
+        self.title(lang.trn.get("settings"))
         self.transient(parent)
         self.grab_set()
         self.focus_force()
@@ -285,22 +279,22 @@ class SettingsWindow(tk.Toplevel):
         self.create_layout()
     
     def create_widgets(self):
-        self.title_label = ttk.Label(self, text="Settings", font=("Helvetica", 16))
-        self.theme_label = ttk.Label(self, text="Theme")
+        self.title_label = ttk.Label(self, text=lang.trn.get("settings"), font=("Helvetica", 16))
+        self.theme_label = ttk.Label(self, text=lang.trn.get("theme"))
         self.theme_var = tk.StringVar()
         self.theme_var.set(self.parent.style.theme_use())
-        self.font_size_label = ttk.Label(self, text="Font Size")
+        self.font_size_label = ttk.Label(self, text=lang.trn.get("font_size"))
         self.font_size_var = tk.StringVar()
         self.font_size_var.set(str(DatabaseCRUD.get_font_size()))
-        self.font_family_label = ttk.Label(self, text="Font Family")
+        self.font_family_label = ttk.Label(self, text=lang.trn.get("font_family"))
         self.font_family_var = tk.StringVar()
         self.font_family_var.set(str(DatabaseCRUD.get_font_family()))
         self.theme_combobox = ttk.Combobox(self, textvariable=self.theme_var, values=THEMES, state='readonly')
         self.theme_combobox.bind("<<ComboboxSelected>>", self.handle_theme_selection)
         self.font_size_combobox = ttk.Combobox(self, textvariable=self.font_size_var, values=['10', '12', '14', '16', '18', '20'])
         self.font_family_combobox = ttk.Combobox(self, textvariable=self.font_family_var, values=['Helvetica', 'Arial', 'Times New Roman', 'Courier New'], state='readonly')
-        self.save_button = ttk.Button(self, text="Save", command=self.handle_save_button)
-        self.cancel_button = ttk.Button(self, text="Cancel", command=self.on_closing, bootstyle='secondary')
+        self.save_button = ttk.Button(self, text=lang.trn.get("save"), command=self.handle_save_button)
+        self.cancel_button = ttk.Button(self, text=lang.trn.get("cancel"), command=self.on_closing, bootstyle='secondary')
     
     def create_layout(self):
         self.grid_columnconfigure(0, weight=1)
@@ -324,12 +318,12 @@ class SettingsWindow(tk.Toplevel):
         font_family = self.font_family_var.get()
         success_font_size = DatabaseCRUD.save_font_size(font_size)
         if not success_font_size:
-            messagebox.showerror("Error", "Failed to save font size!")
+            messagebox.showerror("Error", lang.trn.get("failed_font_size"))
         success_font_family = DatabaseCRUD.save_font_family(font_family)
         if not success_font_family :
-            messagebox.showerror("Error", "Failed to save font family!")
+            messagebox.showerror("Error", lang.trn.get("failed_font_family"))
         if success_font_size and success_font_family:
-            messagebox.showinfo("Success", "Settings saved successfully!")
+            messagebox.showinfo(lang.trn.get("success"), lang.trn.get("settings_saved_successfully"))
         self.grab_release()
         self.destroy()
 
@@ -339,7 +333,6 @@ class SettingsWindow(tk.Toplevel):
     def on_closing(self):
         self.grab_release()
         self.destroy()
-
 
 root = MainWindow()
 root.open_window()
