@@ -62,13 +62,13 @@ class MainWindow(tk.Tk):
     def handle_help_button(self):
         messagebox.showinfo("Help", """This is a basic noting app made using Tkinter.
         Here are the current features included in the app: 
-        - Create a new note
-        - List all notes
-        - Edit a note
-        - Delete a note
-        - Change settings
+        - Create a new note (using "New Note" button)
+        - List all notes (using "List Notes" button)
+        - Edit a note (from the list of notes)
+        - Delete a note (from the list of notes)
+        - Change settings (using "Settings" button)
 
-        Note: Changing the font size and font family applies to text entry fields while adding or editing notes.""")
+        Note: Changing the font size and font family from the settings applies to text entry fields while adding or editing notes.""")
 
     def handle_list_notes_button(self):
         if 'list_notes' in self.child_windows and self.child_windows['list_notes'].winfo_exists():
