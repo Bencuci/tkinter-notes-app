@@ -40,12 +40,11 @@ class DatabaseCRUD:
                     CREATE TABLE IF NOT EXISTS settings (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         font_size INTEGER DEFAULT 12,
-                        font_family TEXT DEFAULT 'Helvetica',
-                        default_save_location TEXT DEFAULT ''
+                        font_family TEXT DEFAULT 'Helvetica'
                     )
                 ''')
                 
-                # insert default settings if not exists
+                # insert default settings if does not exist
                 cursor.execute('INSERT OR IGNORE INTO settings (id) VALUES (1)')
                 
                 conn.commit()
@@ -152,23 +151,6 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
-    # save "default save location" 
-    @staticmethod
-    def save_default_save_location(new_default_save_location):
-        conn = DatabaseCRUD._get_connection()
-        if conn:
-            try:
-                cursor = conn.cursor()
-                cursor.execute('UPDATE settings SET default_save_location = ? WHERE id = 1', 
-                             (new_default_save_location,))
-                conn.commit()
-                return True
-            except sqlite3.Error:
-                return False
-            finally:
-                conn.close()
-        return False
-
     # get all notes as list of dictionaries
     @staticmethod
     def get_notes():
@@ -227,22 +209,6 @@ class DatabaseCRUD:
             try:
                 cursor = conn.cursor()
                 cursor.execute('SELECT font_family FROM settings WHERE id = 1')
-                result = cursor.fetchone()
-                return result[0] if result else False
-            except sqlite3.Error:
-                return False
-            finally:
-                conn.close()
-        return False
-
-    # get default save location
-    @staticmethod
-    def get_default_save_location():
-        conn = DatabaseCRUD._get_connection()
-        if conn:
-            try:
-                cursor = conn.cursor()
-                cursor.execute('SELECT default_save_location FROM settings WHERE id = 1')
                 result = cursor.fetchone()
                 return result[0] if result else False
             except sqlite3.Error:
