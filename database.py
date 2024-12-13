@@ -267,6 +267,7 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # Validation Methods
     # get theme
     @staticmethod
     def get_theme():
@@ -335,7 +336,6 @@ class ExportTools:
             print(f"Error exporting notes: {e}")
             return False
 
-# Validation Methods
 # exception class for input validation errors
 class InputValidationError(Exception):
     pass
