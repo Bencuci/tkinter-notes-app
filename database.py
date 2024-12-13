@@ -40,7 +40,9 @@ class DatabaseCRUD:
                     CREATE TABLE IF NOT EXISTS settings (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         font_size INTEGER DEFAULT 12,
-                        font_family TEXT DEFAULT 'Helvetica'
+                        font_family TEXT DEFAULT 'Helvetica',
+                        language TEXT DEFAULT 'English',
+                        theme TEXT DEFAULT 'superhero'
                     )
                 ''')
                 
@@ -151,6 +153,38 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # save language
+    @staticmethod
+    def save_language(new_language):
+        conn = DatabaseCRUD._get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute('UPDATE settings SET language = ? WHERE id = 1', (new_language,))
+                conn.commit()
+                return True
+            except sqlite3.Error:
+                return False
+            finally:
+                conn.close()
+        return False
+
+    # save theme
+    @staticmethod
+    def save_theme(new_theme):
+        conn = DatabaseCRUD._get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute('UPDATE settings SET theme = ? WHERE id = 1', (new_theme,))
+                conn.commit()
+                return True
+            except sqlite3.Error:
+                return False
+            finally:
+                conn.close()
+        return False
+
     # get all notes as list of dictionaries
     @staticmethod
     def get_notes():
@@ -217,6 +251,37 @@ class DatabaseCRUD:
                 conn.close()
         return False
 
+    # get language
+    @staticmethod
+    def get_language():
+        conn = DatabaseCRUD._get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute('SELECT language FROM settings WHERE id = 1')
+                result = cursor.fetchone()
+                return result[0] if result else False
+            except sqlite3.Error:
+                return False
+            finally:
+                conn.close()
+        return False
+
+    # get theme
+    @staticmethod
+    def get_theme():
+        conn = DatabaseCRUD._get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute('SELECT theme FROM settings WHERE id = 1')
+                result = cursor.fetchone()
+                return result[0] if result else False
+            except sqlite3.Error:
+                return False
+            finally:
+                conn.close()
+        return False
     
 
     # title and content validation
