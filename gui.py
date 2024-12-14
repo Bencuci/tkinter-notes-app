@@ -235,6 +235,8 @@ class ListNotesWindow(tk.Toplevel):
             messagebox.showerror("Error", lang.trn.get("no_note_selected"))
 
     def load_notes(self):
+        self.note_ids = {}
+        self.notes_list.delete(0, tk.END)
         notes = DatabaseCRUD.get_notes()
         self.note_ids = {note["title"]: note["id"] for note in notes}
         for note in notes:
@@ -290,6 +292,7 @@ class EditNoteWindow(tk.Toplevel):
         success = DatabaseCRUD.edit_note(self.note["id"], title, content)
         if success:
             messagebox.showinfo(lang.trn.get("success"), lang.trn.get("saved_successfully"))
+            self.parent.load_notes()
         else:
             messagebox.showerror("Error", lang.trn.get("failed_to_save"))
         self.grab_release()
