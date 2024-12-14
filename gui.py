@@ -191,7 +191,7 @@ class ListNotesWindow(tk.Toplevel):
         self.title_label = ttk.Label(self, text=lang.trn.get("your_notes"), font=("Helvetica", 16))
         self.notes_list = tk.Listbox(self, height=10, width=40)
         self.edit_button = ttk.Button(self, text=lang.trn.get("edit_note"), command=self.handle_edit_button)
-        self.delete_button = ttk.Button(self, text=lang.trn.get("delete_note"), command=self.handle_delete_button)
+        self.delete_button = ttk.Button(self, text=lang.trn.get("delete_note"), command=self.handle_delete_button, bootstyle='danger')
         self.go_back_button = ttk.Button(self, text=lang.trn.get("go_back"), command=self.on_closing, bootstyle='secondary')
     
     def create_layout(self):
