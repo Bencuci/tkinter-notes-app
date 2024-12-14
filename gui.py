@@ -302,7 +302,6 @@ class SettingsWindow(tk.Toplevel):
         self.font_family_var = tk.StringVar()
         self.font_family_var.set(str(DatabaseCRUD.get_font_family()))
         self.theme_combobox = ttk.Combobox(self, textvariable=self.theme_var, values=THEMES, state='readonly')
-        self.theme_combobox.bind("<<ComboboxSelected>>", self.handle_theme_selection)
         self.font_size_combobox = ttk.Combobox(self, textvariable=self.font_size_var, values=['10', '12', '14', '16', '18', '20'])
         self.font_family_combobox = ttk.Combobox(self, textvariable=self.font_family_var, values=['Helvetica', 'Arial', 'Times New Roman', 'Courier New'], state='readonly')
         self.save_button = ttk.Button(self, text=lang.trn.get("save"), command=self.handle_save_button)
@@ -323,12 +322,9 @@ class SettingsWindow(tk.Toplevel):
         self.save_button.grid(row=5, column=0, sticky='we', padx=5, pady=20)
         self.cancel_button.grid(row=5, column=1, sticky='we', padx=5, pady=20)
 
-    def handle_theme_selection(self, event):
-        theme = self.theme_var.get()
-        self.parent.style.theme_use(theme)
-
     def handle_save_button(self):
         global lang 
+        self.grab_release()
         if self.language_var.get() == "Türkçe":
             lang = I18N("tr")
             DatabaseCRUD.save_language("tr")
@@ -341,7 +337,6 @@ class SettingsWindow(tk.Toplevel):
         font_size = int(self.font_size_var.get())
         font_family = self.font_family_var.get()
         theme = self.theme_var.get()
-        self.parent.style.theme_use(theme)
         success_font_size = DatabaseCRUD.save_font_size(font_size)
         if not success_font_size:
             messagebox.showerror("Error", lang.trn.get("failed_font_size"))
@@ -353,9 +348,12 @@ class SettingsWindow(tk.Toplevel):
             messagebox.showerror("Error", lang.trn.get("failed_theme"))
         if success_font_size and success_font_family and success_theme:
             messagebox.showinfo(lang.trn.get("success"), lang.trn.get("settings_saved_successfully"))
-        self.grab_release()
-        self.destroy()
         self.parent.update_translations()
+        try:
+            self.parent.style.theme_use(theme)
+        except:
+            pass # addressing occasional bug upon second theme change
+        self.destroy()
 
     def open_window(self):
         self.mainloop()
