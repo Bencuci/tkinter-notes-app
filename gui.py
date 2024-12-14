@@ -62,7 +62,12 @@ class MainWindow(tk.Tk):
             self.child_windows['new_note'] = new_note_window
 
     def handle_help_button(self):
-        messagebox.showinfo("Help", lang.trn.get("help_text").replace("\\n", "\n"))
+        if 'help' in self.child_windows and self.child_windows['help'].winfo_exists():
+            self.child_windows['help'].lift()
+            self.child_windows['help'].focus_force()
+        else:
+            help_window = HelpWindow(self)
+            self.child_windows['help'] = help_window
 
     def handle_list_notes_button(self):
         if 'list_notes' in self.child_windows and self.child_windows['list_notes'].winfo_exists():
@@ -83,6 +88,35 @@ class MainWindow(tk.Tk):
         self.settings_button.config(text=lang.trn.get("settings"))
         self.help_button.config(text=lang.trn.get("help"))
         self.exit_button.config(text=lang.trn.get("exit"))
+
+class HelpWindow(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.title(lang.trn.get("help"))
+        self.transient(parent)
+        self.grab_set()
+        self.focus_force()
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+        dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 300)
+        self.geometry(dimensions)
+        self.create_widgets()
+        self.create_layout()
+
+    def create_widgets(self):
+        self.help_text = ttk.Label(self, text=lang.trn.get("help_text").replace("\\n", "\n"), font=("Helvetica", 14), wraplength=350)
+        self.ok_button = ttk.Button(self, text=lang.trn.get("go_back"), command=self.on_closing)
+
+    def create_layout(self):
+        self.help_text.pack(pady=10)
+        self.ok_button.pack(pady=10)
+
+    def open_window(self):
+        self.mainloop()
+
+    def on_closing(self):
+        self.grab_release()
+        self.destroy()
 
 class NewNoteWindow(tk.Toplevel):
     def __init__(self, parent):
