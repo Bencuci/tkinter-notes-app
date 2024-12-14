@@ -28,5 +28,6 @@ success=Başarıyla Tamamlandı
 edit_note=Notu Düzenle
 failed_font_size=Yazı boyutu kaydedilemedi!
 failed_font_family=Yazı tipi kaydedilemedi!
+failed_theme=Tema kaydedilemedi.
 settings_saved_successfully=Ayarlar başarıyla kaydedildi!
 help_text=Bu, Tkinter ile yapılmış basit bir not alma uygulamasıdır.\nUygulama şu an aşağıdaki özelliklere sahiptir:\n- Yeni not oluşturma ("Not Ekle" butonu ile)\n- Tüm notları listeleme ("Notlar" butonu ile)\n- Not düzenleme (notlar listesinden)\n- Not silme (notlar listesinden)\n- Ayarları değiştirme ("Ayarlar" butonu ile)\nNot: Yazı boyutu ve yazı tipini ayarlardan değiştirmek, not eklerken veya düzenlerken kullanılan metin giriş alanlarını etkiler.

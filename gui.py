@@ -20,7 +20,7 @@ class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title(lang.trn.get("notes_app"))
-        self.style = ttk.Style(theme='superhero')
+        self.style = ttk.Style(theme=DatabaseCRUD.get_theme())
         dimensions = center_window(SCREEN_WIDTH, SCREEN_HEIGHT, 400, 150)
         self.geometry(dimensions)
         self.create_widgets()
@@ -340,13 +340,18 @@ class SettingsWindow(tk.Toplevel):
             DatabaseCRUD.save_language("en")
         font_size = int(self.font_size_var.get())
         font_family = self.font_family_var.get()
+        theme = self.theme_var.get()
+        self.parent.style.theme_use(theme)
         success_font_size = DatabaseCRUD.save_font_size(font_size)
         if not success_font_size:
             messagebox.showerror("Error", lang.trn.get("failed_font_size"))
         success_font_family = DatabaseCRUD.save_font_family(font_family)
-        if not success_font_family :
+        if not success_font_family:
             messagebox.showerror("Error", lang.trn.get("failed_font_family"))
-        if success_font_size and success_font_family:
+        success_theme = DatabaseCRUD.save_theme(theme)
+        if not success_theme:
+            messagebox.showerror("Error", lang.trn.get("failed_theme"))
+        if success_font_size and success_font_family and success_theme:
             messagebox.showinfo(lang.trn.get("success"), lang.trn.get("settings_saved_successfully"))
         self.grab_release()
         self.destroy()

@@ -28,5 +28,6 @@ success=Success
 edit_note=Edit Note
 failed_font_size=Failed to save font size!
 failed_font_family=Failed to save font family!
+failed_theme=Failed to save theme!
 settings_saved_successfully=Settings saved successfully!
 help_text=This is a basic noting app made using Tkinter.\nHere are the current features included in the app: \n- Create a new note (using "New Note" button)\n- List all notes (using "List Notes" button)\n- Edit a note (from the list of notes)\n- Delete a note (from the list of notes)\n- Change settings (using "Settings" button)\nNote: Changing the font size and font family from the settings applies to text entry fields while adding or editing notes.
