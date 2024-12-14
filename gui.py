@@ -14,7 +14,7 @@ temp_tk.destroy()
 THEMES = ['superhero', 'darkly', 'solar', 'cyborg', 'vapor', 'cosmo', 'flatly', 'journal', 'litera', 'lumen', 'minty', 'pulse', 'sandstone', 'united', 'yeti', 'morph', 'simplex', 'cerculean']
 
 DatabaseCRUD.initialize_database()
-lang = I18N("en")
+lang = I18N(DatabaseCRUD.get_language())
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -331,10 +331,13 @@ class SettingsWindow(tk.Toplevel):
         global lang 
         if self.language_var.get() == "Türkçe":
             lang = I18N("tr")
+            DatabaseCRUD.save_language("tr")
         elif self.language_var.get() == "English":
             lang = I18N("en")
+            DatabaseCRUD.save_language("en")
         else:
             lang = I18N("en") # default language is English
+            DatabaseCRUD.save_language("en")
         font_size = int(self.font_size_var.get())
         font_family = self.font_family_var.get()
         success_font_size = DatabaseCRUD.save_font_size(font_size)

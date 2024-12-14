@@ -40,7 +40,7 @@ class DatabaseCRUD:
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         font_size INTEGER DEFAULT 12,
                         font_family TEXT DEFAULT 'Helvetica',
-                        language TEXT DEFAULT 'English',
+                        language TEXT DEFAULT 'en',
                         theme TEXT DEFAULT 'superhero'
                     )
                 ''')
