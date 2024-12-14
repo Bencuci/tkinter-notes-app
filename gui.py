@@ -368,7 +368,12 @@ class SettingsWindow(tk.Toplevel):
         else:
             lang = I18N("en") # default language is English
             DatabaseCRUD.save_language("en")
-        font_size = int(self.font_size_var.get())
+        try:
+            font_size = int(self.font_size_var.get())
+        except:
+            messagebox.showerror("Error", lang.trn.get("failed_font_size"))
+            font_size = DatabaseCRUD.get_font_size()
+
         font_family = self.font_family_var.get()
         theme = self.theme_var.get()
         success_font_size = DatabaseCRUD.save_font_size(font_size)
